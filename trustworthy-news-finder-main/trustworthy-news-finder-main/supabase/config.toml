@@ -1,0 +1,40 @@
+project_id = "budnnhrplhvimsrvdhuc"
+
+[functions.send-weekly-digest]
+verify_jwt = false
+
+[functions.send-daily-summary]
+verify_jwt = false
+
+[functions.send-low-score-alert]
+verify_jwt = false
+
+[functions.analyze-api]
+verify_jwt = false
+
+[functions.ai-fact-check]
+verify_jwt = false
+
+[functions.send-threat-alert]
+verify_jwt = false
+
+[functions.get-mapbox-token]
+verify_jwt = false
+
+[functions.threat-intelligence]
+verify_jwt = false
+
+[functions.scheduled-scan]
+verify_jwt = false
+
+[functions.send-webhook]
+verify_jwt = false
+
+[functions.reset-rate-limits]
+verify_jwt = false
+
+[functions.send-scheduled-scan-email]
+verify_jwt = false
+
+[functions.send-weekly-alert-digest]
+verify_jwt = false

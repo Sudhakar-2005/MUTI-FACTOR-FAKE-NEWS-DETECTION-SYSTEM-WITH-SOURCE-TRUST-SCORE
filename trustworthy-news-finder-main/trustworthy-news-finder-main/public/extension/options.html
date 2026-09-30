@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustGuard Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <header class="header">
+      <div class="logo">
+        <img src="icons/icon48.png" alt="TrustGuard">
+        <h1>TrustGuard Settings</h1>
+      </div>
+      <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </header>
+
+    <main class="main-content">
+      <!-- Auto-Analysis Settings -->
+      <section class="settings-section">
+        <h2>Analysis Settings</h2>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="autoAnalyze">
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Automatically analyze pages</strong>
+              <small>Analyze websites automatically when you visit them</small>
+            </span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="showFloatingButton" checked>
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Show floating analyze button</strong>
+              <small>Display the TrustGuard button on web pages</small>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Sync Settings -->
+      <section class="settings-section">
+        <h2>🔄 Cross-Device Sync</h2>
+        <p class="section-description">Sync your settings and domain lists across all your Chrome browsers using your Google account.</p>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="syncEnabled">
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Enable Chrome Sync</strong>
+              <small>Automatically sync settings across devices</small>
+            </span>
+          </label>
+        </div>
+        <div class="sync-status" id="syncStatus">
+          <div class="sync-info">
+            <span class="sync-label">Last synced:</span>
+            <span id="lastSynced">Never</span>
+          </div>
+          <div class="sync-info">
+            <span class="sync-label">Storage used:</span>
+            <span id="syncStorage">0 / 100 KB</span>
+          </div>
+          <div class="sync-actions">
+            <button id="syncNow" class="btn-secondary btn-small">⬆️ Sync Now</button>
+            <button id="loadFromSync" class="btn-secondary btn-small">⬇️ Load from Cloud</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Unified Notification Preferences -->
+      <section class="settings-section">
+        <h2>🔔 Notification Preferences</h2>
+        <p class="section-description">Manage all your alert channels from one place.</p>
+        
+        <div class="notif-channels">
+          <!-- Browser Notifications -->
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">🌐</span>
+              <div class="notif-channel-info">
+                <strong>Browser Notifications</strong>
+                <small>Desktop push alerts for low trust scores</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="notificationsEnabled" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Sound Alerts -->
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">🔊</span>
+              <div class="notif-channel-info">
+                <strong>Sound Alerts</strong>
+                <small>Audio warning for blacklisted or low-trust sites</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="soundEnabled" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="notif-channel-actions">
+              <button id="testSound" class="btn-secondary btn-small">🔊 Test Sound</button>
+            </div>
+          </div>
+
+          <!-- Email Alerts (Scheduled Scan) -->
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">📧</span>
+              <div class="notif-channel-info">
+                <strong>Email Scan Reports</strong>
+                <small>Receive email reports when scheduled scans find threats</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="unifiedEmailNotify">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="notif-channel-detail" id="unifiedEmailDetail" style="display:none">
+              <div class="domain-input-group" style="margin-bottom:0">
+                <input type="email" id="unifiedNotificationEmail" placeholder="your@email.com" class="domain-input">
+                <button id="saveUnifiedEmail" class="btn-add trusted">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Watchlist Email Alerts -->
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">👁️</span>
+              <div class="notif-channel-info">
+                <strong>Watchlist Email Alerts</strong>
+                <small>Email when a watched domain drops below its threshold</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="unifiedWatchlistEmail">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Weekly Alert Digest Email -->
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">📊</span>
+              <div class="notif-channel-info">
+                <strong>Weekly Alert Digest Email</strong>
+                <small>Summarizes all alerts fired during the week, grouped by domain &amp; channel</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="unifiedWeeklyAlertDigest">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="notif-channel-detail" id="weeklyDigestDetail" style="display:none">
+              <div class="weekly-digest-info">
+                <span class="digest-next-send">📅 Next digest: <strong id="nextDigestDate">--</strong></span>
+              </div>
+              <button id="sendWeeklyDigestNow" class="btn-secondary btn-small" style="margin-top:8px;">📨 Send Weekly Digest Now</button>
+              <span id="weeklyDigestStatus" class="digest-send-status" style="display:none;margin-left:8px;font-size:12px;"></span>
+            </div>
+          </div>
+
+          <div class="notif-channel">
+            <div class="notif-channel-header">
+              <span class="notif-channel-icon">📉</span>
+              <div class="notif-channel-info">
+                <strong>Score Drop Alerts</strong>
+                <small>Notify when any domain's score drops significantly</small>
+              </div>
+              <label class="toggle-label compact">
+                <input type="checkbox" id="unifiedScoreChangeAlerts" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Per-Channel Cooldown Settings -->
+        <div class="notif-cooldown-section">
+          <h4>⏱️ Notification Cooldowns</h4>
+          <p class="list-description">Limit how often each alert type fires to avoid alert fatigue.</p>
+          <div class="cooldown-grid">
+            <div class="cooldown-item">
+              <label>🌐 Browser Notifications</label>
+              <select id="cooldownBrowser" class="cooldown-select">
+                <option value="0">No limit</option>
+                <option value="5">Max 1 per 5 min</option>
+                <option value="15">Max 1 per 15 min</option>
+                <option value="30">Max 1 per 30 min</option>
+                <option value="60" selected>Max 1 per hour</option>
+              </select>
+            </div>
+            <div class="cooldown-item">
+              <label>🔊 Sound Alerts</label>
+              <select id="cooldownSound" class="cooldown-select">
+                <option value="0">No limit</option>
+                <option value="1">Max 1 per minute</option>
+                <option value="5" selected>Max 1 per 5 min</option>
+                <option value="15">Max 1 per 15 min</option>
+                <option value="30">Max 1 per 30 min</option>
+              </select>
+            </div>
+            <div class="cooldown-item">
+              <label>📧 Email Alerts</label>
+              <select id="cooldownEmail" class="cooldown-select">
+                <option value="0">No limit</option>
+                <option value="60" selected>Max 1 per hour</option>
+                <option value="360">Max 1 per 6 hours</option>
+                <option value="720">Max 1 per 12 hours</option>
+                <option value="1440">Max 1 per day</option>
+              </select>
+            </div>
+            <div class="cooldown-item">
+              <label>👁️ Watchlist Alerts</label>
+              <select id="cooldownWatchlist" class="cooldown-select">
+                <option value="0">No limit</option>
+                <option value="60">Max 1 per hour</option>
+                <option value="360" selected>Max 1 per 6 hours</option>
+                <option value="1440">Max 1 per day</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Global Threshold -->
+        <div class="notif-global-threshold">
+          <h4>Global Alert Threshold</h4>
+          <div class="threshold-setting">
+            <label for="alertThreshold">
+              Warn when trust score is below:
+              <span id="thresholdValue" class="threshold-value">40</span>
+            </label>
+            <input type="range" id="alertThreshold" min="10" max="80" value="40" step="5">
+            <div class="threshold-labels">
+              <span>10</span>
+              <span>80</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Domain Reputation Settings -->
+      <section class="settings-section">
+        <h2>🛡️ Domain Reputation</h2>
+        <p class="section-description">Use external threat intelligence to improve accuracy.</p>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="useReputationAPI" checked>
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Enable reputation lookup</strong>
+              <small>Check domains against URLhaus malware database</small>
+            </span>
+          </label>
+        </div>
+        <div class="reputation-info">
+          <h4>Data Sources</h4>
+          <ul>
+            <li><strong>URLhaus (abuse.ch):</strong> Malware URL database</li>
+            <li><strong>More sources coming soon...</strong></li>
+          </ul>
+          <p class="privacy-note">
+            <small>🔒 Only domain names are sent - no personal data or browsing history is shared.</small>
+          </p>
+        </div>
+      </section>
+
+      <!-- Threshold moved into unified notification panel above -->
+
+      <!-- Keyboard Shortcuts Info -->
+      <section class="settings-section">
+        <h2>Keyboard Shortcuts</h2>
+        <div class="shortcuts-list">
+          <div class="shortcut-item">
+            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>
+            <span>Open TrustGuard popup</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd>
+            <span>Analyze current page</span>
+          </div>
+          <div class="shortcut-item">
+            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd>
+            <span>Toggle overlay visibility</span>
+          </div>
+        </div>
+        <p class="shortcut-note">
+          <small>On Mac, use <kbd>Cmd</kbd> instead of <kbd>Ctrl</kbd></small>
+        </p>
+      </section>
+
+      <!-- Whitelist/Blacklist Settings -->
+      <section class="settings-section">
+        <h2>Domain Lists</h2>
+        <div class="domain-lists">
+          <div class="domain-list-section">
+            <h3 class="list-title trusted">Trusted Sites (Whitelist)</h3>
+            <p class="list-description">These domains will always show high trust scores</p>
+            <div class="domain-input-group">
+              <input type="text" id="whitelistInput" placeholder="example.com" class="domain-input">
+              <button id="addWhitelist" class="btn-add trusted">Add</button>
+            </div>
+            <div class="domain-actions">
+              <button id="importWhitelist" class="btn-secondary btn-small">📥 Import</button>
+              <button id="exportWhitelist" class="btn-secondary btn-small">📤 Export</button>
+            </div>
+            <div id="whitelistItems" class="domain-items"></div>
+          </div>
+          <div class="domain-list-section">
+            <h3 class="list-title suspicious">Suspicious Sites (Blacklist)</h3>
+            <p class="list-description">These domains will always show low trust scores</p>
+            <div class="domain-input-group">
+              <input type="text" id="blacklistInput" placeholder="fake-news.com" class="domain-input">
+              <button id="addBlacklist" class="btn-add suspicious">Add</button>
+            </div>
+            <div class="domain-actions">
+              <button id="importBlacklist" class="btn-secondary btn-small">📥 Import</button>
+              <button id="exportBlacklist" class="btn-secondary btn-small">📤 Export</button>
+            </div>
+            <div id="blacklistItems" class="domain-items"></div>
+          </div>
+        </div>
+        <div class="import-help">
+          <h4>Import File Formats</h4>
+          <p>Supported formats: .txt, .csv, .json</p>
+          <ul>
+            <li><strong>TXT/CSV:</strong> One domain per line, or comma/semicolon separated</li>
+            <li><strong>JSON:</strong> Array of domains or object with "domains" key</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Bulk Domain Scanner -->
+      <section class="settings-section">
+        <h2>🔍 Bulk Domain Scanner</h2>
+        <p class="section-description">Scan multiple URLs at once to check their trust scores.</p>
+        <div class="bulk-scanner">
+          <textarea id="bulkUrls" class="bulk-textarea" rows="6" placeholder="Enter URLs, one per line:&#10;example.com&#10;news-site.org&#10;suspicious-domain.xyz"></textarea>
+          <div class="bulk-actions">
+            <button id="startBulkScan" class="btn-add trusted">🚀 Scan All</button>
+            <button id="clearBulkResults" class="btn-secondary btn-small">Clear Results</button>
+            <button id="exportBulkCSV" class="btn-secondary btn-small" style="display:none">📄 Export CSV</button>
+            <button id="exportBulkJSON" class="btn-secondary btn-small" style="display:none">📋 Export JSON</button>
+            <span id="bulkProgress" class="bulk-progress"></span>
+          </div>
+          <div id="bulkResults" class="bulk-results"></div>
+          <div id="bulkSummaryChart" class="bulk-summary-chart" style="display:none">
+            <div class="chart-row">
+              <div class="mini-chart-container">
+                <h4>Score Distribution</h4>
+                <canvas id="bulkScoreChart" width="300" height="180"></canvas>
+              </div>
+              <div class="mini-chart-container">
+                <h4>Threat Types</h4>
+                <canvas id="bulkThreatChart" width="300" height="180"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scheduled Bulk Scan -->
+      <section class="settings-section">
+        <h2>📅 Scheduled Daily Scan</h2>
+        <p class="section-description">Automatically re-scan your monitored domains every day and get notified of changes.</p>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="scheduledScanEnabled">
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Enable daily scheduled scan</strong>
+              <small>Scans all monitored domains once per day</small>
+            </span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="scheduledScanNotify" checked>
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Notify on new threats</strong>
+              <small>Get a notification when a monitored domain's score drops</small>
+            </span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <input type="checkbox" id="scheduledScanEmailNotify">
+            <span class="toggle-slider"></span>
+            <span class="setting-text">
+              <strong>Email scan results</strong>
+              <small>Receive an email report when threats are found</small>
+            </span>
+          </label>
+        </div>
+        <div class="setting-item" id="emailInputGroup" style="display:none;">
+          <label class="setting-text" style="margin-bottom:4px;"><strong>Notification email</strong></label>
+          <div class="domain-input-group">
+            <input type="email" id="notificationEmail" placeholder="your@email.com" class="domain-input">
+            <button id="saveNotificationEmail" class="btn-add trusted">Save</button>
+          </div>
+        </div>
+        <div class="scheduled-scan-domains">
+          <h4>Monitored Domains</h4>
+          <p class="list-description">These domains will be scanned automatically every day.</p>
+          <div class="domain-input-group">
+            <input type="text" id="monitoredDomainInput" placeholder="domain-to-monitor.com" class="domain-input">
+            <button id="addMonitoredDomain" class="btn-add trusted">Add</button>
+          </div>
+          <button id="addAllWhitelistToMonitor" class="btn-secondary btn-small" style="margin-top:6px">➕ Add all trusted sites</button>
+          <button id="addAllBlacklistToMonitor" class="btn-secondary btn-small" style="margin-top:6px">➕ Add all suspicious sites</button>
+          <div id="monitoredDomainItems" class="domain-items"></div>
+        </div>
+        <div class="scheduled-scan-history">
+          <h4>Last Scheduled Scan</h4>
+          <div class="sync-info">
+            <span class="sync-label">Last run:</span>
+            <span id="lastScheduledScan">Never</span>
+          </div>
+          <div class="sync-info">
+            <span class="sync-label">Domains scanned:</span>
+            <span id="lastScheduledCount">0</span>
+          </div>
+          <div class="sync-info">
+            <span class="sync-label">Threats found:</span>
+            <span id="lastScheduledThreats">0</span>
+          </div>
+          <button id="runScheduledNow" class="btn-secondary btn-small" style="margin-top:8px">▶️ Run Now</button>
+        </div>
+        
+        <!-- Score Change Alerts -->
+        <div class="score-change-alerts">
+          <h4>🔔 Score Change Alerts</h4>
+          <div class="setting-item">
+            <label class="toggle-label">
+              <input type="checkbox" id="scoreChangeAlerts" checked>
+              <span class="toggle-slider"></span>
+              <span class="setting-text">
+                <strong>Alert on significant score drops</strong>
+                <small>Notify when a domain's score drops by more than the threshold</small>
+              </span>
+            </label>
+          </div>
+          <div class="threshold-setting" style="margin-top: 8px;">
+            <label for="scoreDropThreshold">
+              Alert when score drops by more than:
+              <span id="scoreDropThresholdValue" class="threshold-value">15</span> points
+            </label>
+            <input type="range" id="scoreDropThreshold" min="5" max="50" value="15" step="5">
+          </div>
+          <div id="scoreChangeList" class="score-change-list"></div>
+        </div>
+
+        <!-- Domain Watchlist -->
+        <div class="domain-watchlist">
+          <h4>👁️ Domain Watchlist</h4>
+          <p class="list-description">Set per-domain alert thresholds for targeted notifications when specific domains change.</p>
+          <div class="domain-input-group">
+            <input type="text" id="watchlistDomainInput" placeholder="domain-to-watch.com" class="domain-input" style="flex:2">
+            <input type="number" id="watchlistThresholdInput" placeholder="Threshold" min="5" max="50" value="15" class="domain-input" style="flex:1;max-width:90px" title="Score drop threshold">
+            <button id="addWatchlistDomain" class="btn-add trusted">Watch</button>
+          </div>
+          <div class="setting-item">
+            <label class="toggle-label">
+              <input type="checkbox" id="watchlistEmailAlerts">
+              <span class="toggle-slider"></span>
+              <span class="setting-text">
+                <strong>Email alerts for watchlist drops</strong>
+                <small>Send an email when a watched domain's score drops below its threshold</small>
+              </span>
+            </label>
+          </div>
+          <div id="watchlistItems" class="watchlist-items"></div>
+        </div>
+
+        <!-- Scan History Timeline -->
+        <div class="scan-history-timeline">
+          <h4>📈 Score History Timeline</h4>
+          <p class="list-description">Track how monitored domain scores change over time.</p>
+          <div class="timeline-chart-wrapper">
+            <canvas id="timelineChart" width="700" height="250"></canvas>
+          </div>
+          <div id="timelineLegend" class="timeline-legend"></div>
+          <div class="timeline-export-actions">
+            <button id="exportTimelinePNG" class="btn-secondary btn-small">🖼️ Export as PNG</button>
+            <button id="exportTimelinePDF" class="btn-secondary btn-small">📄 Export as PDF</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Domain Comparison -->
+      <section class="settings-section">
+        <h2>⚔️ Domain Comparison</h2>
+        <p class="section-description">Compare threat analysis of two domains side by side.</p>
+        <div class="comparison-inputs">
+          <div class="comparison-input-group">
+            <label>Domain A</label>
+            <input type="text" id="compareDomainA" placeholder="domain-a.com" class="domain-input">
+          </div>
+          <div class="comparison-vs">VS</div>
+          <div class="comparison-input-group">
+            <label>Domain B</label>
+            <input type="text" id="compareDomainB" placeholder="domain-b.com" class="domain-input">
+          </div>
+        </div>
+        <div class="comparison-actions">
+          <button id="runComparison" class="btn-add trusted">⚔️ Compare Domains</button>
+          <span id="comparisonProgress" class="bulk-progress"></span>
+        </div>
+        <div id="comparisonResults" class="comparison-results" style="display:none">
+          <div class="comparison-cards">
+            <div class="comparison-card" id="compareCardA"></div>
+            <div class="comparison-card" id="compareCardB"></div>
+          </div>
+          <div class="comparison-table-wrapper">
+            <table class="comparison-table" id="comparisonTable">
+              <thead>
+                <tr><th>Metric</th><th id="compareHeaderA">Domain A</th><th id="compareHeaderB">Domain B</th></tr>
+              </thead>
+              <tbody id="comparisonTableBody"></tbody>
+            </table>
+          </div>
+          <div id="comparisonVerdict" class="comparison-verdict"></div>
+          <div class="comparison-export-actions" id="comparisonExportActions" style="display:none">
+            <button id="exportComparisonPNG" class="btn-secondary btn-small">🖼️ Export as PNG</button>
+            <button id="exportComparisonPDF" class="btn-secondary btn-small">📄 Export as PDF/HTML</button>
+          </div>
+          
+          <!-- Historical Comparison -->
+          <div id="historicalComparison" class="historical-comparison" style="display:none">
+            <h4>📈 Historical Score Comparison</h4>
+            <p class="list-description">How these domains' scores changed over time based on scan history.</p>
+            <div class="timeline-chart-wrapper">
+              <canvas id="historicalCompChart" width="700" height="220"></canvas>
+            </div>
+            <div id="historicalCompLegend" class="timeline-legend"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Batch Watchlist Import -->
+      <section class="settings-section">
+        <h2>📋 Batch Watchlist Import</h2>
+        <p class="section-description">Upload a CSV file to bulk-add domains with custom thresholds to your watchlist.</p>
+        <div class="batch-import-info">
+          <h4>CSV Format</h4>
+          <p>Each row should contain: <code>domain,threshold</code></p>
+          <p>Example:</p>
+          <pre class="csv-example">domain,threshold
+example.com,10
+suspicious-site.xyz,20
+news-source.org,15</pre>
+          <p><small>If threshold is omitted, the default (15) will be used. Header row is optional.</small></p>
+        </div>
+        <div class="batch-import-actions">
+          <button id="importWatchlistCSV" class="btn-add trusted">📥 Import CSV</button>
+          <button id="exportWatchlistCSV" class="btn-secondary btn-small">📤 Export Watchlist CSV</button>
+          <span id="batchImportStatus" class="bulk-progress"></span>
+        </div>
+      </section>
+
+      <!-- Analytics Dashboard -->
+      <section class="settings-section">
+        <h2>Analytics Dashboard</h2>
+        <div class="analytics-summary">
+          <div class="stat-card">
+            <span class="stat-value" id="totalAnalyses">0</span>
+            <span class="stat-label">Total Analyses</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="avgScore">--</span>
+            <span class="stat-label">Average Score</span>
+          </div>
+          <div class="stat-card reliable">
+            <span class="stat-value" id="reliableCount">0</span>
+            <span class="stat-label">Reliable</span>
+          </div>
+          <div class="stat-card suspicious">
+            <span class="stat-value" id="suspiciousCount">0</span>
+            <span class="stat-label">Suspicious</span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>Trust Score Trends (Last 30 Days)</h3>
+          <div class="chart-wrapper">
+            <canvas id="trendChart" width="700" height="200"></canvas>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>Score Distribution</h3>
+          <div class="distribution-bars" id="distributionBars">
+            <div class="dist-bar-group">
+              <div class="dist-bar reliable" style="height: 0%"></div>
+              <span>80-100</span>
+            </div>
+            <div class="dist-bar-group">
+              <div class="dist-bar good" style="height: 0%"></div>
+              <span>60-79</span>
+            </div>
+            <div class="dist-bar-group">
+              <div class="dist-bar questionable" style="height: 0%"></div>
+              <span>40-59</span>
+            </div>
+            <div class="dist-bar-group">
+              <div class="dist-bar unreliable" style="height: 0%"></div>
+              <span>20-39</span>
+            </div>
+            <div class="dist-bar-group">
+              <div class="dist-bar suspicious" style="height: 0%"></div>
+              <span>0-19</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analysis History -->
+      <section class="settings-section">
+        <h2>Analysis History</h2>
+        <div class="history-controls">
+          <button id="clearHistory" class="btn-secondary">Clear All History</button>
+          <button id="exportHistory" class="btn-secondary">Export History</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <p class="empty-state">Loading history...</p>
+        </div>
+      </section>
+
+      <!-- Save Status -->
+      <div id="saveStatus" class="save-status hidden">
+        Settings saved!
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>TrustGuard v1.3.0 &mdash; <a href="https://trustguard.app" target="_blank">Visit Website</a></p>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

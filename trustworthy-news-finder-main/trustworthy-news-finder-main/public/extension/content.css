@@ -1,0 +1,29 @@
+#trustguard-floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2147483647;
+  box-shadow: 0 4px 20px rgba(45, 212, 191, 0.4);
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+#trustguard-floating-btn:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  box-shadow: 0 6px 24px rgba(45, 212, 191, 0.5);
+}
+
+#trustguard-floating-btn svg {
+  width: 24px;
+  height: 24px;
+  color: #0a0f18;
+}

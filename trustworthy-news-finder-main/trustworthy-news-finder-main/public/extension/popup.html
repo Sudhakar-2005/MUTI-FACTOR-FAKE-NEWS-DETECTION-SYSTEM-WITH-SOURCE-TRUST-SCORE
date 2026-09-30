@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrustGuard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <svg class="shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <div class="logo-text">
+          <h1>TrustGuard</h1>
+          <span>Fake News Detector</span>
+        </div>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" title="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Instant Score Preview -->
+    <div id="instant-score" class="instant-score hidden">
+      <span class="instant-icon">🔍</span>
+      <span class="instant-domain">example.com</span>
+      <span class="instant-status">Analyzing...</span>
+    </div>
+
+    <main class="content">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Analyzing page...</p>
+      </div>
+
+      <div id="result" class="result hidden">
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="score-bg" cx="50" cy="50" r="45"/>
+            <circle id="score-progress" class="score-progress" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="score-value">
+            <span id="score-number">0</span>
+            <span class="score-label">Trust Score</span>
+          </div>
+        </div>
+
+        <div id="rating-badge" class="rating-badge">
+          <span id="rating-text">Analyzing...</span>
+        </div>
+
+        <div class="score-breakdown">
+          <div class="score-item">
+            <span class="score-item-label">Text Analysis</span>
+            <div class="score-bar">
+              <div id="text-bar" class="score-bar-fill"></div>
+            </div>
+            <span id="text-score" class="score-item-value">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-item-label">Domain Trust</span>
+            <div class="score-bar">
+              <div id="domain-bar" class="score-bar-fill"></div>
+            </div>
+            <span id="domain-score" class="score-item-value">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-item-label">Evidence</span>
+            <div class="score-bar">
+              <div id="evidence-bar" class="score-bar-fill"></div>
+            </div>
+            <span id="evidence-score" class="score-item-value">0</span>
+          </div>
+          <div class="score-item">
+            <span class="score-item-label">Sentiment</span>
+            <div class="score-bar">
+              <div id="sentiment-bar" class="score-bar-fill"></div>
+            </div>
+            <span id="sentiment-score" class="score-item-value">0</span>
+          </div>
+        </div>
+
+        <div id="explanation" class="explanation"></div>
+
+        <!-- Threat Report Section -->
+        <div id="threat-report" class="threat-report hidden">
+          <div class="threat-report-header">
+            <h3>🛡️ Threat Intelligence Report</h3>
+            <button id="refresh-report" class="refresh-btn" title="Refresh report">🔄</button>
+          </div>
+          
+          <div id="threat-summary" class="threat-summary">
+            <div class="risk-indicator">
+              <span class="risk-label">Risk Level:</span>
+              <span id="risk-level" class="risk-badge safe">Safe</span>
+            </div>
+            <div class="sources-checked">
+              <span>Sources checked:</span>
+              <span id="sources-count">0</span>
+            </div>
+          </div>
+
+          <div id="threats-list" class="threats-list">
+            <!-- Threats will be populated here -->
+          </div>
+
+          <div id="recommendations" class="recommendations">
+            <h4>Recommendations</h4>
+            <ul id="recommendations-list"></ul>
+          </div>
+
+          <div class="report-actions">
+            <button id="export-pdf" class="export-pdf-btn" title="Download PDF Report">
+              📄 Export PDF
+            </button>
+            <button id="view-full-report" class="view-full-report-btn">
+              View Full Report →
+            </button>
+          </div>
+          
+          <div id="threat-feed-status" class="threat-feed-status">
+            <div class="feed-status-header">
+              <span>🔄 Live Threat Feeds</span>
+              <span id="feed-update-time" class="feed-update-time">--</span>
+            </div>
+            <div class="feed-stats">
+              <span>📊 <span id="feed-db-size">0</span> known threats</span>
+              <button id="update-feeds-btn" class="update-feeds-btn" title="Update Now">⟳</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="initial" class="initial hidden">
+        <button id="analyze-btn" class="analyze-button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          Check Trust Score
+        </button>
+        <p class="hint">Analyze the current page for misinformation</p>
+      </div>
+
+      <div id="error" class="error hidden">
+        <p id="error-message">Something went wrong</p>
+        <button id="retry-btn" class="retry-button">Try Again</button>
+      </div>
+    </main>
+
+    <div id="shortcuts-panel" class="shortcuts-panel hidden">
+      <div class="shortcuts-header">
+        <span>Keyboard Shortcuts</span>
+        <button id="close-shortcuts" class="close-shortcuts">&times;</button>
+      </div>
+      <div class="shortcuts-content">
+        <div class="shortcut-row">
+          <div class="shortcut-keys">
+            <kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>T</kbd>
+          </div>
+          <span class="shortcut-desc">Open popup</span>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys">
+            <kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>A</kbd>
+          </div>
+          <span class="shortcut-desc">Analyze page</span>
+        </div>
+        <div class="shortcut-row">
+          <div class="shortcut-keys">
+            <kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>O</kbd>
+          </div>
+          <span class="shortcut-desc">Toggle overlay</span>
+        </div>
+      </div>
+      <p class="shortcuts-note">On Mac, use <kbd>⌘ Cmd</kbd> instead of <kbd>Ctrl</kbd></p>
+    </div>
+
+    <!-- Notification Digest Summary -->
+    <div id="digest-panel" class="digest-panel hidden">
+      <div class="digest-header">
+        <span>📋 Today's Alert Digest</span>
+        <button id="close-digest" class="close-shortcuts">&times;</button>
+      </div>
+      <div class="digest-filter-row">
+        <label for="digest-severity-filter">Filter:</label>
+        <select id="digest-severity-filter" class="digest-filter-select">
+          <option value="all">All Severities</option>
+          <option value="critical">🔴 Critical</option>
+          <option value="high">🟠 High</option>
+          <option value="medium">🟡 Medium</option>
+          <option value="low">🟢 Low</option>
+        </select>
+      </div>
+      <div id="digest-stats" class="digest-stats">
+        <div class="digest-stat">
+          <span class="digest-stat-value" id="digest-total">0</span>
+          <span class="digest-stat-label">Total</span>
+        </div>
+        <div class="digest-stat">
+          <span class="digest-stat-value" id="digest-browser">0</span>
+          <span class="digest-stat-label">Browser</span>
+        </div>
+        <div class="digest-stat">
+          <span class="digest-stat-value" id="digest-email">0</span>
+          <span class="digest-stat-label">Email</span>
+        </div>
+        <div class="digest-stat">
+          <span class="digest-stat-value" id="digest-sound">0</span>
+          <span class="digest-stat-label">Sound</span>
+        </div>
+      </div>
+      <!-- Severity Chart (7-day) -->
+      <div id="digest-chart-container" class="digest-chart-container">
+        <h4 class="digest-chart-title">📊 7-Day Alert Trend</h4>
+        <canvas id="digest-severity-chart" width="320" height="120"></canvas>
+      </div>
+      <div id="digest-list" class="digest-list">
+        <p class="digest-empty">No alerts today</p>
+      </div>
+      <div class="digest-actions">
+        <button id="export-digest-csv" class="digest-export-btn">📥 Export CSV</button>
+        <button id="clear-digest" class="digest-clear-btn">Clear Digest</button>
+      </div>
+    </div>
+
+    <!-- Deep Analysis Panel -->
+    <div id="deep-analysis-panel" class="deep-analysis-panel hidden">
+      <div class="digest-header">
+        <span>🔬 Deep Content Analysis</span>
+        <button id="close-deep-analysis" class="close-shortcuts">&times;</button>
+      </div>
+      <div id="deep-analysis-loading" class="deep-analysis-loading hidden">
+        <div class="spinner"></div>
+        <p>AI is analyzing content in depth...</p>
+      </div>
+      <div id="deep-analysis-result" class="deep-analysis-result"></div>
+      <div id="deep-analysis-empty" class="deep-analysis-empty">
+        <p>Analyze a page first, then click "Deep Analysis" to get AI-powered claim verification, bias detection, and source credibility assessment.</p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <button id="show-shortcuts" class="shortcuts-toggle">⌨️ Shortcuts</button>
+      <button id="show-digest" class="shortcuts-toggle">📋 Digest</button>
+      <button id="show-deep-analysis" class="shortcuts-toggle deep-analysis-toggle">🔬 Deep Analysis</button>
+      <a href="https://trustguard.app" target="_blank" class="footer-link">
+        Dashboard →
+      </a>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
